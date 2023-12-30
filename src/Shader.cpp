@@ -33,11 +33,23 @@ bool Shader::compile()
 
     glShaderSource(id, 1, &rawShaderSource, NULL);
     glCompileShader(id);
-
-    return true;
+    return checkErrors();
 }
 
 void Shader::del()
 {
     glDeleteShader(id);
+}
+
+bool Shader::checkErrors()
+{
+    int success;
+    glGetShaderiv(id, GL_COMPILE_STATUS, &success);
+
+    if(!success) {
+        char infoLog[512];
+        glGetShaderInfoLog(id, 512, NULL, infoLog);
+        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+    }
+    return (bool)success;
 }

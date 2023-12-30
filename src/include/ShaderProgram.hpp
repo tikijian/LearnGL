@@ -7,6 +7,8 @@ class ShaderProgram
 {
 private:
     unsigned int id;
+
+    bool checkErrors();
 public:
     ShaderProgram(const Shader * vertexShdr, const Shader * fragmentShdr);
     ~ShaderProgram();

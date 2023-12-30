@@ -5,6 +5,8 @@ class Shader
 {
 private:
     const char* filepath;
+
+    bool checkErrors();
 public:
     unsigned int id;
 
