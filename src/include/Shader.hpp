@@ -14,7 +14,7 @@ public:
     ~Shader();
 
     bool compile();
-    void del();
+    void del() const;
 };
 
 #endif

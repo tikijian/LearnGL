@@ -36,7 +36,7 @@ bool Shader::compile()
     return checkErrors();
 }
 
-void Shader::del()
+void Shader::del() const
 {
     glDeleteShader(id);
 }

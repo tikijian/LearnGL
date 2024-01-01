@@ -9,6 +9,26 @@ ShaderProgram::ShaderProgram(const Shader * vertexShdr, const Shader * fragmentS
     glAttachShader(id, fragmentShdr->id);
     glLinkProgram(id);
     checkErrors();
+    vertexShdr->del();
+    fragmentShdr->del();
+}
+
+ShaderProgram::ShaderProgram(const char * vertexShdrPath, const char * fragmentShdrPath)
+{
+    Shader vertexShdr(vertexShdrPath, GL_VERTEX_SHADER);
+    vertexShdr.compile();
+
+    Shader fragmentShdr(fragmentShdrPath, GL_FRAGMENT_SHADER);
+    fragmentShdr.compile();
+
+    id = glCreateProgram();
+    glAttachShader(id, vertexShdr.id);
+    glAttachShader(id, fragmentShdr.id);
+    glLinkProgram(id);
+    checkErrors();
+
+    vertexShdr.del();
+    fragmentShdr.del();
 }
 
 ShaderProgram::~ShaderProgram()
@@ -32,4 +52,19 @@ bool ShaderProgram::checkErrors()
     }
      
     return (bool)success;
+}
+
+void ShaderProgram::setBool(const std::string &name, bool value) const
+{         
+    glUniform1i(glGetUniformLocation(id, name.c_str()), (int)value); 
+}
+
+void ShaderProgram::setInt(const std::string &name, int value) const
+{ 
+    glUniform1i(glGetUniformLocation(id, name.c_str()), value); 
+}
+
+void ShaderProgram::setFloat(const std::string &name, float value) const
+{ 
+    glUniform1f(glGetUniformLocation(id, name.c_str()), value); 
 }
