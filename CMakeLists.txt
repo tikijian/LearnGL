@@ -3,6 +3,7 @@ project(LearnGL)
 cmake_policy(SET CMP0072 NEW)
 
 add_executable(hello
+    vendor/stb_image.h
     vendor/glad/glad.h
     vendor/glad/glad.c
     src/include/Shader.hpp
