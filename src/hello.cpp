@@ -144,7 +144,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // glBindTexture(GL_TEXTURE_2D, texture1);
-        // float timeValue = glfwGetTime();
+        float timeValue = glfwGetTime();
         // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
         // int vertexColorLocation = glGetUniformLocation(shProgram.id, "ourColor");
          // create transformations
@@ -165,13 +165,10 @@ int main()
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-
-
         transform = glm::mat4(1.0f); // reset it to identity matrix
         transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
-        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+        transform = glm::scale(transform, glm::vec3(sin(timeValue)));
         glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
