@@ -11,7 +11,7 @@ private:
 public:
     unsigned int id;
 
-    ShaderProgram(const Shader * vertexShdr, const Shader * fragmentShdr);
+    ShaderProgram(const Shader & vertexShdr, const Shader & fragmentShdr);
     ShaderProgram(const char * vertexShdrPath, const char * fragmentShdrPath);
     ~ShaderProgram();
 

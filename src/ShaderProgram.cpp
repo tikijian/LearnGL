@@ -2,15 +2,15 @@
 #include "../vendor/glad/glad.h"
 #include <iostream>
 
-ShaderProgram::ShaderProgram(const Shader * vertexShdr, const Shader * fragmentShdr)
+ShaderProgram::ShaderProgram(const Shader & vertexShdr, const Shader & fragmentShdr)
 {
     id = glCreateProgram();
-    glAttachShader(id, vertexShdr->id);
-    glAttachShader(id, fragmentShdr->id);
+    glAttachShader(id, vertexShdr.id);
+    glAttachShader(id, fragmentShdr.id);
     glLinkProgram(id);
     checkErrors();
-    vertexShdr->del();
-    fragmentShdr->del();
+    vertexShdr.del();
+    fragmentShdr.del();
 }
 
 ShaderProgram::ShaderProgram(const char * vertexShdrPath, const char * fragmentShdrPath)
