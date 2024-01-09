@@ -8,6 +8,7 @@ add_executable(hello
     vendor/glad/glad.c
     src/include/Shader.hpp
     src/include/ShaderProgram.hpp
+    src/include/Camera.hpp
 
     src/ShaderProgram.cpp
     src/Shader.cpp
