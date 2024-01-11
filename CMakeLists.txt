@@ -6,12 +6,15 @@ add_executable(hello
     vendor/stb_image.h
     vendor/glad/glad.h
     vendor/glad/glad.c
+    src/include/GlDeps.hpp
     src/include/Shader.hpp
     src/include/ShaderProgram.hpp
     src/include/Camera.hpp
+    src/include/App.hpp
 
     src/ShaderProgram.cpp
     src/Shader.cpp
+    src/App.cpp
     src/hello.cpp
 )
 

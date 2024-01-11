@@ -1,5 +1,5 @@
+#include "include/GlDeps.hpp"
 #include "include/ShaderProgram.hpp"
-#include "../vendor/glad/glad.h"
 #include <iostream>
 
 ShaderProgram::ShaderProgram(const Shader & vertexShdr, const Shader & fragmentShdr)
