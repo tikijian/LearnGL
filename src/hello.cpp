@@ -37,9 +37,6 @@ int main()
 
     glfwSetCursorPosCallback(app.window, mouse_callback);
 
-    SnakeGame game;
-    game.initialize();
-
     lastX = app.SCR_WIDTH / 2.0f;
     lastY = app.SCR_HEIGHT / 2.0f;
 
@@ -49,18 +46,18 @@ int main()
     glGenVertexArrays(1, &VAO);
 
     // data
-    glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(CUBE_VERTICES_DATA), CUBE_VERTICES_DATA, GL_STATIC_DRAW);
 
     // data interpretation:
 
     // vertex positions
+    glBindVertexArray(VAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(SHADER_VERTEX_ATTRIB_LOCATION);
     // texture coords:
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
 
     // load texture
     unsigned int texture1, texture2;
@@ -96,11 +93,8 @@ int main()
     stbi_image_free(data);
 
     ShaderProgram shProgram("shaders/vBasic.glsl", "shaders/fBasic.glsl");
-    glEnableVertexAttribArray(SHADER_VERTEX_ATTRIB_LOCATION);
-    glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
-
-    // bind textures to Shader texture units
     shProgram.use();
+    // bind textures to Shader texture units
     shProgram.setInt("texture1", 0);
     shProgram.setInt("texture2", 1);
     float mixValue = 0.2f;
@@ -109,6 +103,9 @@ int main()
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
     shProgram.setMat4("projection", projection);
+
+    SnakeGame game(&shProgram);
+    game.initialize();
 
     // render loop
     // -----------
@@ -126,7 +123,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // glBindTexture(GL_TEXTURE_2D, texture1);
-        float timeValue = glfwGetTime();
         // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
 
         glActiveTexture(GL_TEXTURE0);
@@ -139,14 +135,22 @@ int main()
         
         // model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
+        // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        // model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         shProgram.setMat4("model", model);
         // view
         glm::mat4 view = camera.GetViewMatrix();
         shProgram.setMat4("view", view);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(1.0f, .0f, .0f));
+        shProgram.setMat4("model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        
+        game.render();
 
         // transform = glm::mat4(1.0f); // reset it to identity matrix
         // transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));

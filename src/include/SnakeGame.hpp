@@ -3,6 +3,7 @@
 
 #include "GlDeps.hpp"
 #include "GameObject.hpp"
+#include "ShaderProgram.hpp"
 #include <iostream>
 #include "SnakeGame/Field.hpp"
 
@@ -25,8 +26,9 @@ class SnakeGame
 {
 private:
     Field field;
+    ShaderProgram * shader;
 public:
-    SnakeGame(/* args */);
+    SnakeGame(ShaderProgram * shaderProgram);
     ~SnakeGame();
 
     void initialize();
