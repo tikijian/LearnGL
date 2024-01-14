@@ -11,10 +11,18 @@ add_executable(hello
     src/include/ShaderProgram.hpp
     src/include/Camera.hpp
     src/include/App.hpp
+    src/include/Primitives.hpp
+    src/include/GameObject.hpp
+    
+    src/include/SnakeGame/Field.hpp
+    src/include/SnakeGame.hpp
 
     src/ShaderProgram.cpp
     src/Shader.cpp
     src/App.cpp
+    
+    src/SnakeGame/SnakeGame.cpp
+
     src/hello.cpp
 )
 
