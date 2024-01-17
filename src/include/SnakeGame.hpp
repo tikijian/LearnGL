@@ -16,12 +16,6 @@ enum Directions {
 };
 
 // Constants
-const unsigned int TILE_W = 32;
-const unsigned int TILE_H = 32;
-
-const unsigned int FIELD_W = 20;
-const unsigned int FIELD_H = 15;
-
 class SnakeGame
 {
 private:

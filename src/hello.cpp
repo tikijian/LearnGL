@@ -1,5 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
-#include "../vendor/stb_image.h"
 #include "include/GlDeps.hpp"
 
 #include <iostream>
@@ -8,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "include/Utils.h"
 #include "include/App.hpp"
 #include "include/Shader.hpp"
 #include "include/ShaderProgram.hpp"
@@ -25,7 +24,7 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 1.0f, 2.0f));
 float lastX;
 float lastY;
 bool firstMouse = true;
@@ -49,8 +48,6 @@ int main()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(CUBE_VERTICES_DATA), CUBE_VERTICES_DATA, GL_STATIC_DRAW);
 
-    // data interpretation:
-
     // vertex positions
     glBindVertexArray(VAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
@@ -60,9 +57,9 @@ int main()
     glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
 
     // load texture
-    unsigned int texture1, texture2;
-    glGenTextures(1, &texture1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
     // set the texture wrapping/filtering options (on the currently bound texture object)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -77,31 +74,15 @@ int main()
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
     
-    glGenTextures(1, &texture2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    stbi_set_flip_vertically_on_load(true);
-    data = stbi_load("textures/awesomeface.png", &texWidth, &texHeight, &nrChannels, 0);
-    if (!data) {
-        exit(1);
-    }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-
     ShaderProgram shProgram("shaders/vBasic.glsl", "shaders/fBasic.glsl");
     shProgram.use();
     // bind textures to Shader texture units
-    shProgram.setInt("texture1", 0);
-    shProgram.setInt("texture2", 1);
-    float mixValue = 0.2f;
+    // shProgram.setInt("textureData", 0);
 
     // projection
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    float ratio = static_cast<float>(App::SCR_WIDTH) / static_cast<float>(App::SCR_HEIGHT);
+    projection = glm::perspective(glm::radians(45.0f), ratio, 0.1f, 100.0f);
     shProgram.setMat4("projection", projection);
 
     SnakeGame game(&shProgram);
@@ -122,17 +103,8 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // glBindTexture(GL_TEXTURE_2D, texture1);
-        // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
-        shProgram.setFloat("mixValue", mixValue);
-
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VAO);
-        
         // model
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
@@ -146,7 +118,7 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(1.0f, .0f, .0f));
+        model = glm::translate(model, glm::vec3(2.0f, .0f, .0f));
         shProgram.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         

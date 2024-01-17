@@ -14,6 +14,8 @@ SnakeGame::~SnakeGame()
 
 void SnakeGame::initialize()
 {
+    field.position = glm::vec3(.0f, -0.3f, -0.5f);
+    // field.position = glm::vec3(.0f, .0f, .0f);
     field.initialize();
 }
 

@@ -49,7 +49,7 @@ bool Shader::checkErrors()
     if(!success) {
         char infoLog[512];
         glGetShaderInfoLog(id, 512, NULL, infoLog);
-        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << infoLog << std::endl;
+        std::cout << "ERROR::SHADER::COMPILATION_FAILED\n" << filepath << "\n" << infoLog << std::endl;
     }
     return (bool)success;
 }
