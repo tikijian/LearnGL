@@ -14,6 +14,7 @@
 
 #include "include/Primitives.hpp"
 #include "include/SnakeGame.hpp"
+#include "include/Mesh.hpp"
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
@@ -39,41 +40,6 @@ int main()
     lastX = app.SCR_WIDTH / 2.0f;
     lastY = app.SCR_HEIGHT / 2.0f;
 
-    // VAO
-    uint VAO, VBO;
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-
-    // data
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(CUBE_VERTICES_DATA), CUBE_VERTICES_DATA, GL_STATIC_DRAW);
-
-    // vertex positions
-    glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(SHADER_VERTEX_ATTRIB_LOCATION);
-    // texture coords:
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
-
-    // load texture
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    // set the texture wrapping/filtering options (on the currently bound texture object)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    int texWidth, texHeight, nrChannels;
-    unsigned char *data = stbi_load("textures/container.jpg", &texWidth, &texHeight, &nrChannels, 0);
-    if (!data) {
-        exit(1);
-    }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-    stbi_image_free(data);
-    
     ShaderProgram shProgram("shaders/vBasic.glsl", "shaders/fBasic.glsl");
     shProgram.use();
     // bind textures to Shader texture units
@@ -88,6 +54,9 @@ int main()
     SnakeGame game(&shProgram);
     game.initialize();
 
+    Mesh cube1 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
+    Mesh cube2 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
+    
     // render loop
     // -----------
     while (!app.shouldClose())
@@ -102,25 +71,29 @@ int main()
         // ------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glBindVertexArray(VAO);
-        // model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
-        // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        // model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        shProgram.setMat4("model", model);
+        
         // view
         glm::mat4 view = camera.GetViewMatrix();
         shProgram.setMat4("view", view);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-
-        model = glm::mat4(1.0f);
+        glBindTexture(GL_TEXTURE_2D, cube1.texture);
+        glBindVertexArray(cube1.vao);
+        glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(2.0f, .0f, .0f));
         shProgram.setMat4("model", model);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+
+        glBindTexture(GL_TEXTURE_2D, cube2.texture);
+        glBindVertexArray(cube2.vao);
+        // model
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
+        // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        // model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
+        shProgram.setMat4("model", model);
+
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+
         
         game.render();
 
@@ -137,8 +110,10 @@ int main()
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteVertexArrays(1, &cube1.vao);
+    glDeleteBuffers(1, &cube1.vao);
+    glDeleteVertexArrays(1, &cube2.vao);
+    glDeleteBuffers(1, &cube2.vao);
     game.cleanup();
 
     app.terminate();

@@ -10,6 +10,7 @@ class GameObject
 protected:
     unsigned int vbo;
     unsigned int vao;
+    unsigned int texture;
 
 public:
     glm::vec3 position;

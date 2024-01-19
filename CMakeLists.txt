@@ -8,6 +8,7 @@ add_executable(hello
     vendor/glad/glad.c
     src/include/GlDeps.hpp
     src/include/Utils.h
+    src/include/Mesh.hpp
     src/include/Shader.hpp
     src/include/ShaderProgram.hpp
     src/include/Camera.hpp
@@ -19,6 +20,7 @@ add_executable(hello
     src/include/SnakeGame.hpp
 
     src/Utils.cpp
+    src/Mesh.cpp
     src/ShaderProgram.cpp
     src/Shader.cpp
     src/App.cpp

@@ -20,7 +20,6 @@ const float SCALE_FACTOR = 0.01f;
 class Field : public GameObject {
 private:
     unsigned int ebo;
-    unsigned int texture;
     ShaderProgram * shader;
 public:
 
@@ -49,20 +48,21 @@ public:
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
         // vertex positions
-        glVertexAttribPointer(0, COMPONENTS_PER_VERTEX_ATTRIBUTE, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        auto stride = (COMPONENTS_PER_VERTEX_ATTRIBUTE + COMPONENTS_PER_TEXTURE_ATTRIBUTE) * sizeof(float);
+        glVertexAttribPointer(0, COMPONENTS_PER_VERTEX_ATTRIBUTE, GL_FLOAT, GL_FALSE, stride, (void*)0);
         glEnableVertexAttribArray(SHADER_VERTEX_ATTRIB_LOCATION);
-        // texture coords:
+        // texture coords
         const GLvoid* textureDataOffset = (void*)(COMPONENTS_PER_VERTEX_ATTRIBUTE * sizeof(float)); 
-        glVertexAttribPointer(1, COMPONENTS_PER_TEXTURE_ATTRIBUTE, GL_FLOAT, GL_FALSE, 5 * sizeof(float), textureDataOffset);
+        glVertexAttribPointer(1, COMPONENTS_PER_TEXTURE_ATTRIBUTE, GL_FLOAT, GL_FALSE, stride, textureDataOffset);
         glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
+
+        texture = loadTexture("snake-floor.png");
 
         // field position is fixed, so set it during init
         float fieldScale = static_cast<float>(FIELD_W * FIELD_H) * SCALE_FACTOR;
         modelTransform = glm::scale(modelTransform, glm::vec3(fieldScale));
         modelTransform = glm::translate(modelTransform, position);
         modelTransform = glm::rotate(modelTransform, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
-
-        loadTexture(std::string("snake-floor.png"));
     }
     void update(){}
 
@@ -86,26 +86,6 @@ public:
         glDeleteBuffers(1, &ebo);
     }
 
-    void loadTexture(const std::string & filename) {
-        // load texture
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        // set the texture wrapping/filtering options (on the currently bound texture object)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        int texWidth, texHeight, nrChannels;
-        unsigned char *data = stbi_load(std::string("textures/").append(filename).c_str(), &texWidth, &texHeight, &nrChannels, 0);
-
-        if (!data) {
-            //log(std::string(std::string("Unable to open texture ") + filename));
-            exit(1);
-        }
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-        stbi_image_free(data);
-    }
 };
 
 #endif

@@ -1,7 +1,9 @@
 #ifndef PRIMITIVES_HPP
 #define PRIMITIVES_HPP
 
-const float CUBE_VERTICES_DATA[] = {
+#include <vector>
+
+static const std::vector<float> CUBE_VERTICES_DATA {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
      0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
      0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
