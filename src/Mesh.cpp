@@ -23,7 +23,20 @@ const Mesh loadMesh(const std::vector<float> & bufferData, const char * filename
 
     mesh.texture = loadTexture(filename);
 
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return mesh;
+}
+
+void renderMesh(const Mesh &mesh, unsigned int trianglesCount)
+{
+    glBindVertexArray(mesh.vao);
+    glBindTexture(GL_TEXTURE_2D, mesh.texture);
+    glDrawArrays(GL_TRIANGLES, 0, trianglesCount);
+}
+
+void destroyMesh(Mesh &mesh)
+{
+    glDeleteVertexArrays(1, &mesh.vao);
+    glDeleteBuffers(1, &mesh.vao);
 }

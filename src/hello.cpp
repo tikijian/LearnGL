@@ -76,15 +76,12 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         shProgram.setMat4("view", view);
 
-        glBindTexture(GL_TEXTURE_2D, cube1.texture);
-        glBindVertexArray(cube1.vao);
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(2.0f, .0f, .0f));
         shProgram.setMat4("model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
 
-        glBindTexture(GL_TEXTURE_2D, cube2.texture);
-        glBindVertexArray(cube2.vao);
+        renderMesh(cube1, CUBE_TRIANGLES_COUNT);
+
         // model
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
@@ -92,9 +89,8 @@ int main()
         // model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
         shProgram.setMat4("model", model);
 
-        glDrawArrays(GL_TRIANGLES, 0, 36);
+        renderMesh(cube2, CUBE_TRIANGLES_COUNT);
 
-        
         game.render();
 
         // transform = glm::mat4(1.0f); // reset it to identity matrix
@@ -110,10 +106,8 @@ int main()
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    glDeleteVertexArrays(1, &cube1.vao);
-    glDeleteBuffers(1, &cube1.vao);
-    glDeleteVertexArrays(1, &cube2.vao);
-    glDeleteBuffers(1, &cube2.vao);
+    destroyMesh(cube1);
+    destroyMesh(cube2);
     game.cleanup();
 
     app.terminate();

@@ -13,5 +13,7 @@ struct Mesh
 };
 
 const Mesh loadMesh(const std::vector<float> & bufferData, const char * filename);
+void renderMesh(const Mesh & mesh, unsigned int trianglesCount);
+void destroyMesh(Mesh & mesh);
 
 #endif
