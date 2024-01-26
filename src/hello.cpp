@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <math.h>
+#include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -42,8 +43,6 @@ int main()
 
     ShaderProgram shProgram("shaders/vBasic.glsl", "shaders/fBasic.glsl");
     shProgram.use();
-    // bind textures to Shader texture units
-    // shProgram.setInt("textureData", 0);
 
     // projection
     glm::mat4 projection;
@@ -57,13 +56,20 @@ int main()
     // Mesh cube1 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
     // Mesh cube2 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
     
-    // render loop
-    // -----------
+    int fps = 0;
+    float timer = .0f;
     while (!app.shouldClose())
     {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
+        timer += deltaTime;
         lastFrame = currentFrame;
+
+        if (timer > 1.0f) {
+            glfwSetWindowTitle(app.window, std::to_string(fps).c_str());
+            timer = 0.0f;
+            fps = 0.0;
+        }
         // input
         processInput(app.window);
         
@@ -111,6 +117,8 @@ int main()
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
         app.swapBuffers();
+
+        fps++;
         glfwPollEvents();
     }
 
@@ -143,6 +151,8 @@ void processInput(GLFWwindow *window)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS)
+        glfwSwapInterval(0);
 }
 
 
