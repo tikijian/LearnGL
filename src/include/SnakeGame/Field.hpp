@@ -13,19 +13,18 @@
 // const unsigned int TILE_W = 32;
 // const unsigned int TILE_H = 32;
 
-const unsigned int FIELD_W = 20;
-const unsigned int FIELD_H = 15;
-const float SCALE_FACTOR = 0.01f;
-
 class Field : public GameObject {
 private:
     unsigned int ebo;
+    float cols;
+    float rows;
     ShaderProgram * shader;
 public:
 
-    Field()
+    Field(float _cols, float _rows) : cols(_cols), rows(_rows)
     {
         modelTransform = glm::mat4(1.0f);
+        position = glm::vec3(.0f);
     }
     ~Field(){}
 
@@ -59,8 +58,8 @@ public:
         texture = loadTexture("snake-floor.png");
 
         // field position is fixed, so set it during init
-        float fieldScale = static_cast<float>(FIELD_W * FIELD_H) * SCALE_FACTOR;
-        modelTransform = glm::scale(modelTransform, glm::vec3(fieldScale));
+        // auto fieldScale = (cols * rows) * SCALE_FACTOR;
+        modelTransform = glm::scale(modelTransform, glm::vec3(3.0f));
         modelTransform = glm::translate(modelTransform, position);
         modelTransform = glm::rotate(modelTransform, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, .0f));
     }
@@ -69,8 +68,8 @@ public:
     void render()
     {
         glBindTexture(GL_TEXTURE_2D, texture);
-        shader->setMat4("model", modelTransform);
         glBindVertexArray(vao);
+        shader->setMat4("model", modelTransform);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     }
 
@@ -85,7 +84,6 @@ public:
         glDeleteBuffers(1, &vbo);
         glDeleteBuffers(1, &ebo);
     }
-
 };
 
 #endif

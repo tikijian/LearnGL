@@ -25,7 +25,7 @@ float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
 // camera
-Camera camera(glm::vec3(0.0f, 1.0f, 2.0f));
+Camera camera(glm::vec3(0.0f, 2.3f, 3.0f));
 float lastX;
 float lastY;
 bool firstMouse = true;
@@ -54,8 +54,8 @@ int main()
     SnakeGame game(&shProgram);
     game.initialize();
 
-    Mesh cube1 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
-    Mesh cube2 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
+    // Mesh cube1 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
+    // Mesh cube2 = loadMesh(CUBE_VERTICES_DATA, "container.jpg");
     
     // render loop
     // -----------
@@ -76,20 +76,30 @@ int main()
         glm::mat4 view = camera.GetViewMatrix();
         shProgram.setMat4("view", view);
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(2.0f, .0f, .0f));
-        shProgram.setMat4("model", model);
+        // glm::mat4 model = glm::mat4(1.0f);
+        // model = glm::translate(model, glm::vec3(2.0f, .0f, .0f));
+        // shProgram.setMat4("model", model);
 
-        renderMesh(cube1, CUBE_TRIANGLES_COUNT);
+        // renderMesh(cube1, CUBE_TRIANGLES_COUNT);
 
         // model
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(-2.0f, .0f, .0f));
+        // glm::mat4 model(1.0f);
+        // model = glm::scale(model, glm::vec3(0.5f));
+        // model = glm::translate(model, glm::vec3(1.0f, 1.0f, 3.0f));
+        // model = glm::translate(model, glm::vec3(-2.0f, .7f, -2.0f));
         // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         // model = glm::rotate(model, currentFrame * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-        shProgram.setMat4("model", model);
+        // shProgram.setMat4("model", model);
 
-        renderMesh(cube2, CUBE_TRIANGLES_COUNT);
+        // renderMesh(cube1, CUBE_TRIANGLES_COUNT);
+        
+        // model = glm::translate(model, glm::vec3(1.0f, 1.0f, .0f));
+        // shProgram.setMat4("model", model);
+        // renderMesh(cube1, CUBE_TRIANGLES_COUNT);
+        
+        // model = glm::translate(model, glm::vec3(1.0f, 1.0f, .0f));
+        // shProgram.setMat4("model", model);
+        // renderMesh(cube1, CUBE_TRIANGLES_COUNT);
 
         game.render();
 
@@ -106,8 +116,8 @@ int main()
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
-    destroyMesh(cube1);
-    destroyMesh(cube2);
+    // destroyMesh(cube1);
+    // destroyMesh(cube2);
     game.cleanup();
 
     app.terminate();

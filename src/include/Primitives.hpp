@@ -3,6 +3,8 @@
 
 #include <vector>
 
+static const float SCALE_FACTOR = 0.1f;
+
 static unsigned int CUBE_TRIANGLES_COUNT = 36;
 
 static const std::vector<float> CUBE_VERTICES_DATA {
