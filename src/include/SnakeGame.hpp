@@ -28,19 +28,27 @@ struct SnakeBlock {
 class SnakeGame
 {
 private:
-    Field field;
-    Mesh cube;
-    ShaderProgram * shader;
-    SnakeBlock snake;
-    glm::mat4 baseMatrix;
-    std::vector<SnakeBlock> blocks;
+    GLuint containerTexId;
+    GLuint baitTexId;
+    GLuint headTexId;
     unsigned short size;
+    glm::mat4 baseMatrix;
+    SnakeBlock snake;
+    SnakeBlock bait;
+    std::vector<SnakeBlock> blocks;
+    Mesh cube;
+    Field field;
+    ShaderProgram * shader;
+
+    bool isBaitEaten();
+    void updateSnakeBody();
+
 public:
     SnakeGame(ShaderProgram * shaderProgram);
     ~SnakeGame();
 
     void initialize();
-    void handleInput();
+    void handleInput(GLFWwindow *window);
     void update();
     void render();
 

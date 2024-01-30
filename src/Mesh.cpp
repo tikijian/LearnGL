@@ -1,7 +1,7 @@
 #include "include/Utils.h"
 #include "include/Mesh.hpp"
 
-const Mesh loadMesh(const std::vector<float> & bufferData, const char * filename)
+const Mesh loadMesh(const std::vector<float> & bufferData)
 {
     Mesh mesh { 0, 0, 0 };
     glGenBuffers(1, &mesh.vbo);
@@ -21,17 +21,18 @@ const Mesh loadMesh(const std::vector<float> & bufferData, const char * filename
     glVertexAttribPointer(1, COMPONENTS_PER_TEXTURE_ATTRIBUTE, GL_FLOAT, GL_FALSE, stride, textureDataOffset);
     glEnableVertexAttribArray(SHADER_TEXTURE_ATTRIB_LOCATION);
 
-    mesh.texture = loadTexture(filename);
+    // mesh.texture = loadTexture(filename);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return mesh;
 }
 
-void renderMesh(const Mesh &mesh, unsigned int trianglesCount)
+void renderMesh(const Mesh &mesh, GLuint textureId, unsigned int trianglesCount)
 {
     glBindVertexArray(mesh.vao);
-    glBindTexture(GL_TEXTURE_2D, mesh.texture);
+    // glBindTexture(GL_TEXTURE_2D, mesh.texture);
+    glBindTexture(GL_TEXTURE_2D, textureId);
     glDrawArrays(GL_TRIANGLES, 0, trianglesCount);
 }
 

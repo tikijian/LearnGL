@@ -8,5 +8,5 @@
 #include <string>
 
 void log(std::string & message);
-GLuint loadTexture(const std::string & filename);
+GLuint loadTexture(const std::string & filename, GLuint colorFormat = GL_RGB);
 #endif

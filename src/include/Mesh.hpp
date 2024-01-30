@@ -12,8 +12,8 @@ struct Mesh
     GLuint texture;
 };
 
-const Mesh loadMesh(const std::vector<float> & bufferData, const char * filename);
-void renderMesh(const Mesh & mesh, unsigned int trianglesCount);
+const Mesh loadMesh(const std::vector<float> & bufferData);
+void renderMesh(const Mesh & mesh, GLuint textureId, unsigned int trianglesCount);
 void destroyMesh(Mesh & mesh);
 
 #endif

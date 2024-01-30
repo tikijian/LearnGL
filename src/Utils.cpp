@@ -6,7 +6,7 @@ void log(std::string &message)
     std::cout << message << std::endl;
 }
 
-GLuint loadTexture(const std::string & filename)
+GLuint loadTexture(const std::string & filename, GLuint colorFormat)
 {
     GLuint textureId;
     // load texture
@@ -24,7 +24,9 @@ GLuint loadTexture(const std::string & filename)
         //log(std::string(std::string("Unable to open texture ") + filename));
         exit(1);
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    if (! colorFormat)
+        colorFormat = GL_RGB;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, colorFormat, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     stbi_image_free(data);
 

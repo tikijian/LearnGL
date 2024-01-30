@@ -65,14 +65,19 @@ int main()
         timer += deltaTime;
         lastFrame = currentFrame;
 
-        if (timer > 1.0f) {
+        // input
+        processInput(app.window);
+        game.handleInput(app.window);
+        
+        if (timer > .4f) {
             glfwSetWindowTitle(app.window, std::to_string(fps).c_str());
             timer = 0.0f;
             fps = 0.0;
+
+            game.update();
         }
-        // input
-        processInput(app.window);
-        
+
+
         // render
         // ------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
