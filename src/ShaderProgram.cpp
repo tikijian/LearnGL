@@ -17,7 +17,6 @@ ShaderProgram::ShaderProgram(const char * vertexShdrPath, const char * fragmentS
 {
     Shader vertexShdr(vertexShdrPath, GL_VERTEX_SHADER);
     vertexShdr.compile();
-
     Shader fragmentShdr(fragmentShdrPath, GL_FRAGMENT_SHADER);
     fragmentShdr.compile();
 
@@ -72,4 +71,8 @@ void ShaderProgram::setFloat(const std::string &name, float value) const
 void ShaderProgram::setMat4(const std::string &name, glm::mat4 &matrix)
 {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, glm::value_ptr(matrix));
+}
+void ShaderProgram::setVec3(const std::string &name, float v1, float v2, float v3)
+{
+    glUniform3f(glGetUniformLocation(id, name.c_str()), v1, v2, v3);
 }

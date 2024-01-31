@@ -43,6 +43,8 @@ int main()
 
     ShaderProgram shProgram("shaders/vBasic.glsl", "shaders/fBasic.glsl");
     shProgram.use();
+    shProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+    shProgram.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
 
     // projection
     glm::mat4 projection;
