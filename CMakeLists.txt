@@ -2,10 +2,23 @@ cmake_minimum_required(VERSION 3.10)
 project(LearnGL)
 cmake_policy(SET CMP0072 NEW)
 
+set(APP_NAME hello)
+
+set(IMGUI_SOURCES
+    vendor/imgui/imgui.cpp
+    vendor/imgui/imgui_demo.cpp
+    vendor/imgui/imgui_draw.cpp
+    vendor/imgui/imgui_widgets.cpp
+)
+
+set(IMGUI_DIR vendor/imgui)
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends ..)
+
 add_executable(hello
     vendor/stb_image.h
     vendor/glad/glad.h
     vendor/glad/glad.c
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp ${IMGUI_DIR}/imgui.cpp ${IMGUI_DIR}/imgui_draw.cpp ${IMGUI_DIR}/imgui_demo.cpp ${IMGUI_DIR}/imgui_tables.cpp ${IMGUI_DIR}/imgui_widgets.cpp
     src/include/GlDeps.hpp
     src/include/Utils.h
     src/include/Mesh.hpp

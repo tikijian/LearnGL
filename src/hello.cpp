@@ -3,6 +3,11 @@
 #include <iostream>
 #include <math.h>
 #include <string>
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -36,7 +41,24 @@ int main()
     App app;
     app.initialize();
 
+        // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsLight();
+
+    // Setup Platform/Renderer backends
+    ImGui_ImplGlfw_InitForOpenGL(app.window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+
+
     glfwSetCursorPosCallback(app.window, mouse_callback);
+
 
     lastX = app.SCR_WIDTH / 2.0f;
     lastY = app.SCR_HEIGHT / 2.0f;
@@ -60,6 +82,7 @@ int main()
     
     int fps = 0;
     float timer = .0f;
+    bool show_demo_window = true;
     while (!app.shouldClose())
     {
         float currentFrame = static_cast<float>(glfwGetTime());
@@ -79,11 +102,21 @@ int main()
             game.update();
         }
 
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
+        if (show_demo_window)
+            ImGui::ShowDemoWindow(&show_demo_window);
+
 
         // render
         // ------
+        ImGui::Render();
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         
         // view
         glm::mat4 view = camera.GetViewMatrix();
@@ -134,6 +167,10 @@ int main()
     // destroyMesh(cube1);
     // destroyMesh(cube2);
     game.cleanup();
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     app.terminate();
     return 0;
